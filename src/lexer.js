@@ -50,13 +50,17 @@ const charToAction = {
 
 const getAction = (char) => charToAction[char] || Action.char;
 
+const dataEmitTest = (data) => {
+    return data.trim();
+};
+
 /**
  * @param  {Object} options
  * @param  {Boolean} options.debug
  * @return {Object}
  */
 const create = (options) => {
-    options = Object.assign({debug: false}, options);
+    options = Object.assign({debug: false, dataEmitTest: dataEmitTest}, options);
     const lexer = new EventEmitter();
     let state = State.data;
     let data = '';
@@ -81,7 +85,7 @@ const create = (options) => {
     lexer.stateMachine = {
         [State.data]: {
             [Action.lt]: () => {
-                if (data.trim()) {
+                if (options.dataEmitTest(data)) {
                     emit(Type.text, data);
                 }
                 tagName = '';

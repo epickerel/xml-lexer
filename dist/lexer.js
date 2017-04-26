@@ -54,6 +54,10 @@ var getAction = function getAction(char) {
     return charToAction[char] || Action.char;
 };
 
+var dataEmitTest = function dataEmitTest(data) {
+    return data.trim();
+};
+
 /**
  * @param  {Object} options
  * @param  {Boolean} options.debug
@@ -62,14 +66,14 @@ var getAction = function getAction(char) {
 var create = function create(options) {
     var _State$data, _State$tagBegin, _State$tagName, _State$tagEnd, _State$attributeNameS, _State$attributeName, _State$attributeNameE, _State$attributeValue, _State$attributeValue2, _lexer$stateMachine;
 
-    options = Object.assign({ debug: false }, options);
+    options = Object.assign({ debug: false, dataEmitTest: dataEmitTest }, options);
     var lexer = new EventEmitter();
     var state = State.data;
     var data = '';
     var tagName = '';
     var attrName = '';
     var attrValue = '';
-    var isClosing = '';
+    var isClosing = false;
     var openingQuote = '';
 
     var emit = function emit(type, value) {
@@ -85,7 +89,7 @@ var create = function create(options) {
     };
 
     lexer.stateMachine = (_lexer$stateMachine = {}, _defineProperty(_lexer$stateMachine, State.data, (_State$data = {}, _defineProperty(_State$data, Action.lt, function () {
-        if (data.trim()) {
+        if (options.dataEmitTest(data)) {
             emit(Type.text, data);
         }
         tagName = '';
